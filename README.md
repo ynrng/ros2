@@ -1,3 +1,39 @@
+# Build on mac on 12/Mar/2026
+There are some dependency and environment issues from the original ros2.repos. mainly on rviz. fixed by changing branch of some packages.
+
+```sh
+conda install python=3.10
+conda install cmake=3.22
+
+brew install asio assimp bison bullet cmake console_bridge cppcheck \
+   cunit eigen freetype graphviz opencv openssl orocos-kdl pcre poco \
+   pyqt@5 python qt@5 sip spdlog osrf/simulation/tinyxml1 tinyxml2
+
+
+python3 -m pip install --upgrade pip
+
+python3 -m pip install -U \
+  --config-settings="--global-option=build_ext" \
+  --config-settings="--global-option=-I$(brew --prefix graphviz)/include/" \
+  --config-settings="--global-option=-L$(brew --prefix graphviz)/lib/" \
+  argcomplete catkin_pkg colcon-common-extensions coverage \
+  cryptography empy<4.0 flake8 flake8-blind-except==0.1.1 flake8-builtins \
+  flake8-class-newline flake8-comprehensions flake8-deprecated \
+  flake8-docstrings flake8-import-order flake8-quotes \
+  importlib-metadata lark==1.1.1 lxml matplotlib mock mypy==0.931 netifaces \
+  nose pep8 psutil pydocstyle pydot pygraphviz pyparsing==2.4.7 \
+  pytest-mock rosdep rosdistro setuptools==59.6.0 vcstool
+
+
+mkdir -p ~/ros2_humble/src
+cd ~/ros2_humble
+vcs import --input https://raw.githubusercontent.com/ynrng/ros2/refs/heads/humble/ros2.repos src
+
+cd ~/ros2_humble/ 
+colcon build --symlink-install --packages-skip-by-dep python_qt_binding --cmake-args -DBUILD_TESTING=OFF   
+
+```
+
 # About
 The Robot Operating System (ROS) is a set of software libraries and tools that help you build robot applications.
 From drivers to state-of-the-art algorithms, and with powerful developer tools, ROS has what you need for your next robotics project.
